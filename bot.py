@@ -15,6 +15,7 @@ Run:  python bot.py
 import logging
 import os
 import sqlite3
+import sys
 
 from dotenv import load_dotenv
 from telethon import TelegramClient, events
@@ -146,6 +147,19 @@ async def login():
 
     if await client.is_user_authorized():
         return
+
+    # No authorized session. Interactive login needs a real terminal (to type the
+    # phone code) — inside Docker/systemd there is none, so fail loudly instead of
+    # hanging on input() forever.
+    if not sys.stdin.isatty():
+        raise SystemExit(
+            f"Not logged in and no interactive terminal is attached.\n"
+            f"The session at SESSION_PATH ({_session_file}) is missing or not "
+            f"authorized.\nLog in once on a machine with a terminal:\n"
+            f"    python login.py\n"
+            f"then make that .session file available at SESSION_PATH (mount it "
+            f"into the container)."
+        )
 
     phone = PHONE or input("Phone number (international format, e.g. +98...): ").strip()
     print(f"\n>>> Sending login code to {phone} …", flush=True)

@@ -5,9 +5,11 @@ services:
     restart: unless-stopped
     env_file: .env
     environment:
-      # Overrides SESSION_NAME; must point inside the mounted volume below.
+      # The bot reads the session from SESSION_PATH. This is the container path
+      # and it OVERRIDES whatever SESSION_PATH is in .env (which is a host path),
+      # so the container always uses the mounted session below.
       SESSION_PATH: /data/userbot.session
     volumes:
-      # Persist the Telethon session so you only log in once.
-      # Put your locally-created userbot.session in ./session/ before deploying.
+      # Mount your already-logged-in session into the container at /data.
+      # Put userbot.session in ./session/ before deploying (see README).
       - ./session:/data

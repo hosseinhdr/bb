@@ -23,11 +23,13 @@ load_dotenv()
 API_ID = int(os.getenv("API_ID", "0"))
 API_HASH = os.getenv("API_HASH", "")
 PHONE = os.getenv("PHONE", "")
-SESSION_NAME = os.getenv("SESSION_NAME", "userbot")
+# Keep this in sync with bot.py: SESSION_PATH (if set) wins over SESSION_NAME,
+# so login.py writes the session exactly where bot.py will later read it.
+SESSION = os.getenv("SESSION_PATH") or os.getenv("SESSION_NAME", "userbot")
 
 
 async def main():
-    client = TelegramClient(SESSION_NAME, API_ID, API_HASH)
+    client = TelegramClient(SESSION, API_ID, API_HASH)
     await client.connect()
 
     if await client.is_user_authorized():
