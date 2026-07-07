@@ -1,0 +1,13 @@
+services:
+  userbot:
+    build: .
+    container_name: caption-userbot
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      # Overrides SESSION_NAME; must point inside the mounted volume below.
+      SESSION_PATH: /data/userbot.session
+    volumes:
+      # Persist the Telethon session so you only log in once.
+      # Put your locally-created userbot.session in ./session/ before deploying.
+      - ./session:/data

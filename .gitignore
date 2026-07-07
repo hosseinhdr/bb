@@ -1,0 +1,10 @@
+# Secrets & session
+.env
+*.session
+*.session-journal
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
